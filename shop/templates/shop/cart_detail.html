@@ -1,0 +1,96 @@
+
+{% extends "shop/base.html" %}
+
+{% block title %}My Cart | ShopNow{% endblock %}
+
+{% block content %}
+
+<section class="cart-section">
+
+    <h1>My Shopping Cart</h1>
+
+    <p class="subtitle">Review your selected products.</p>
+
+    {% for item in items %}
+
+        <article class="cart-card">
+
+            <div class="cart-info">
+
+                <h3>{{ item.product.name }}</h3>
+
+                <p>Price: ₹{{ item.product.price }}</p>
+
+                <p>Available stock: {{ item.product.stock }}</p>
+
+                <strong>Subtotal: ₹{{ item.line_total }}</strong>
+
+            </div>
+
+            <div class="cart-actions">
+
+                <form method="post"
+                      action="{% url 'shop:cart_update' item.product.id %}">
+
+                    {% csrf_token %}
+
+                    <input
+                        type="number"
+                        name="quantity"
+                        value="{{ item.quantity }}"
+                        min="0"
+                        max="{{ item.product.stock }}"
+                        required
+                    >
+
+                    <button type="submit" class="btn">
+                        Update
+                    </button>
+
+                </form>
+
+                <form method="post"
+                      action="{% url 'shop:cart_remove' item.product.id %}">
+
+                    {% csrf_token %}
+
+                    <button type="submit" class="remove-btn">
+                        Remove
+                    </button>
+
+                </form>
+
+            </div>
+
+        </article>
+
+    {% empty %}
+
+        <div class="empty-cart">
+            <h2>Your cart is empty!</h2>
+            <p>Explore our products and add something you like.</p>
+
+            <a href="{% url 'shop:product_list' %}" class="btn">
+                Start Shopping
+            </a>
+        </div>
+
+    {% endfor %}
+
+    {% if items %}
+
+        <div class="cart-total">
+
+            <h2>Subtotal: ₹{{ total }}</h2>
+
+            <button type="button" class="btn" disabled>
+                Checkout Coming Soon
+            </button>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

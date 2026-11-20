@@ -1,0 +1,65 @@
+
+{% extends "shop/base.html" %}
+
+{% block title %}Products | ShopNow{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <p class="eyebrow">WELCOME TO SHOPNOW</p>
+    <h1>Find your next favourite.</h1>
+    <p>Discover quality products at great prices.</p>
+</section>
+
+<section class="products-section">
+
+    <h2>Our Products</h2>
+
+    <div class="product-grid">
+
+        {% for product in products %}
+
+            <article class="product-card">
+
+                <div class="product-info">
+
+                    <span class="stock-label">
+                        {{ product.stock }} in stock
+                    </span>
+
+                    <h3>{{ product.name }}</h3>
+
+                    <p>{{ product.description }}</p>
+
+                    <div class="product-bottom">
+
+                        <strong>₹{{ product.price }}</strong>
+
+                        <form method="post"
+                              action="{% url 'shop:cart_add' product.id %}">
+
+                            {% csrf_token %}
+
+                            <button type="submit" class="btn">
+                                Add to Cart
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+        {% empty %}
+
+            <p>No products are available currently.</p>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}
